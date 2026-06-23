@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Nova — Mon compte</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800&family=Hanken+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet" />
+
+  <!-- Design du coéquipier chargé tel quel (adopté, non forké) — cf. COLLABORATION.md §8 -->
+  <script type="module" crossorigin src="./assets/app-CsV7wfrc.js"></script>
+  <link rel="stylesheet" crossorigin href="./assets/app-CuXusvPr.css">
+  <link rel="stylesheet" crossorigin href="./assets/base-9Hrb9Sfg.css">
+</head>
+<body>
+  <div class="bank" data-theme="beige" style="--bk-r: 22px">
+    <header class="bk-top">
+      <a href="index.html" class="bk-word">nova</a>
+      <!-- La navigation par onglets (design Beta) est rendue par src/ui/app-shell.js -->
+      <nav class="bk-tabs" aria-hidden="true"></nav>
+      <div class="bk-right">
+        <a href="index.html" class="bk-exit">Quitter</a>
+        <span class="bk-avatar">AM</span>
+      </div>
+    </header>
+
+    <main class="bk-main"></main>
+
+    <footer class="bk-legal-footer">
+      <a href="/pages/terms.html">Conditions</a> ·
+      <a href="/pages/privacy.html">Confidentialité</a> ·
+      <a href="/pages/risks.html">Risques</a>
+      <p>Rendement variable, historique, non garanti. Le capital n'est pas garanti.</p>
+    </footer>
+  </div>
+
+  <!-- Le design du coéquipier (window.NovaUI / NovaComponents / NovaData) est importé
+       en side-effect depuis src/main.js (bundlé par Vite → marche en dev ET en prod). -->
+</body>
+</html>

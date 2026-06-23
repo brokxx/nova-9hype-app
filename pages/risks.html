@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Nova — Divulgation des risques</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;700&family=Hanken+Grotesk:wght@400;500&display=swap" rel="stylesheet" />
+  <style>
+    .legal-wrapper {
+      max-width: 720px;
+      margin: 0 auto;
+      padding: 64px 24px 96px;
+    }
+    .legal-banner {
+      background: #fff3cd;
+      border: 1px solid #ffc107;
+      border-radius: 8px;
+      padding: 16px 20px;
+      margin-bottom: 40px;
+      font-size: 15px;
+      line-height: 1.5;
+    }
+    .legal-wrapper h1 {
+      font-size: clamp(28px, 5vw, 40px);
+      margin-bottom: 8px;
+    }
+    .legal-date {
+      color: #6b6b6b;
+      font-size: 14px;
+      margin-bottom: 48px;
+      display: block;
+    }
+    .legal-wrapper h2 {
+      font-size: 18px;
+      margin-top: 40px;
+      margin-bottom: 12px;
+    }
+    .legal-wrapper p {
+      margin-bottom: 16px;
+      line-height: 1.7;
+    }
+    .legal-wrapper ul {
+      padding-left: 24px;
+      margin-bottom: 16px;
+    }
+    .legal-wrapper li {
+      margin-bottom: 8px;
+      line-height: 1.6;
+    }
+    .legal-warning {
+      margin-top: 48px;
+      padding: 20px 24px;
+      background: #fef2f2;
+      border: 1px solid #fca5a5;
+      border-radius: 8px;
+      font-weight: 500;
+      text-align: center;
+    }
+    hr {
+      border: none;
+      border-top: 1px solid #d0cbc3;
+      margin: 40px 0;
+    }
+    .back-link {
+      display: inline-block;
+      margin-bottom: 32px;
+      font-size: 14px;
+      color: #6b6b6b;
+      text-decoration: underline;
+    }
+  </style>
+  <link rel="stylesheet" crossorigin href="../assets/base-9Hrb9Sfg.css">
+</head>
+<body>
+  <div class="legal-wrapper">
+    <a class="back-link" href="../App.html">&larr; Retour à l'application</a>
+
+    <h1>Nova — Divulgation des risques (Risk Disclosure)</h1>
+
+    <div class="legal-banner">
+      <strong>MODÈLE — NON FINALISÉ.</strong> Document à faire relire par un avocat spécialisé crypto/finance et à publier sous l'entité émettrice ([SOCIÉTÉ], [JURIDICTION — ex : BVI]) avant toute mise en ligne. Ne constitue pas un conseil juridique.
+    </div>
+
+    <span class="legal-date">Dernière mise à jour : [DATE]</span>
+
+    <p>En déposant des fonds dans le protocole Nova et en mintant des tokens 9HYPE, vous reconnaissez avoir lu, compris et accepté l'intégralité des risques ci-dessous. <strong>Ne déposez que des fonds que vous pouvez vous permettre de perdre en totalité.</strong></p>
+
+    <h2>1. « Delta-neutral » ne veut pas dire « sans risque »</h2>
+    <p>La stratégie vise à neutraliser l'exposition au prix du HYPE (long spot + short perpétuel de même taille), mais cela <strong>n'élimine pas</strong> les autres risques décrits ci-dessous. Une stratégie delta-neutral peut <strong>perdre de l'argent</strong>.</p>
+
+    <h2>2. Risque de taux de financement (funding) négatif</h2>
+    <p>Le rendement provient des paiements de funding du marché perpétuel. Ce funding peut devenir <strong>négatif</strong> : dans ce cas, la position <strong>paie</strong> au lieu de recevoir, et la valeur du token peut <strong>baisser</strong>. Les rendements passés ne préjugent pas des rendements futurs. <strong>Aucun rendement n'est garanti.</strong></p>
+
+    <h2>3. Risque d'opérateur et de custody (point de confiance central)</h2>
+    <p>Le capital déposé est transféré par un <strong>opérateur</strong> vers un compte HyperCore (Hyperliquid) qualifié, où la stratégie est exécutée. <strong>Le protocole n'est PAS une custody trustless de la jambe déployée</strong> : la sécurité du capital déployé repose sur l'intégrité et la sécurité opérationnelle de l'opérateur et de ses clés. Une <strong>compromission</strong>, une <strong>erreur</strong> ou un <strong>comportement malveillant</strong> de l'opérateur peut entraîner une <strong>perte partielle ou totale</strong> des fonds déployés. Le contrat fournit la comptabilité des parts, la transparence de la NAV et une file de retrait ordonnée — <strong>pas</strong> une garantie de récupération du capital déployé.</p>
+
+    <h2>4. Risque de contrepartie / plateforme (Hyperliquid)</h2>
+    <p>Les fonds déployés résident sur <strong>Hyperliquid</strong>, une plateforme tierce. Un dysfonctionnement, une insolvabilité, un gel, un piratage, un changement de règles, une mise en pause des retraits ou une défaillance technique d'Hyperliquid peut entraîner une <strong>perte des fonds</strong>, hors du contrôle du protocole.</p>
+
+    <h2>5. Risque de liquidation</h2>
+    <p>La jambe short perpétuelle utilise un compte à marge. Dans des conditions de marché extrêmes (mouvement violent, désynchronisation spot/perp, manque de marge, défaillance du keeper), la position peut être <strong>partiellement ou totalement liquidée</strong>, générant une perte.</p>
+
+    <h2>6. Risque de base (basis) et de désynchronisation</h2>
+    <p>Le prix spot et le prix perpétuel ne sont jamais parfaitement identiques (base, premium, divergence d'oracle). Un écart défavorable, ou un retard dans le rééquilibrage automatique, peut générer une exposition directionnelle temporaire et une perte.</p>
+
+    <h2>7. Risque de smart contract</h2>
+    <p>Le contrat 9HYPE est un logiciel. Malgré les tests et revues, il peut contenir des <strong>bugs</strong>, des <strong>vulnérabilités</strong> ou se comporter de façon inattendue. Un exploit peut entraîner une <strong>perte totale</strong>. [Le cas échéant : statut d'audit externe — voir section Audits.]</p>
+
+    <h2>8. Risque d'oracle de NAV</h2>
+    <p>La valeur de la stratégie (strategyValue) est <strong>rapportée par le keeper</strong> (reportNav), bornée par mise à jour et soumise à une fraîcheur maximale. Le prix par part dépend de l'exactitude de ces rapports. Une donnée erronée, un retard, ou une manipulation de prix de marché au moment du rapport peut fausser temporairement le prix par part appliqué aux dépôts/retraits.</p>
+
+    <h2>9. Risque de retrait (file d'attente, délai, règlement partiel)</h2>
+    <p>Les retraits <strong>ne sont pas instantanés</strong>. Ils passent par une <strong>file</strong> : vous demandez un retrait (<code>requestRedeem</code>), puis le keeper dénoue la position et vous règle en USDC, <strong>typiquement sous 24 à 72 heures</strong>, sans garantie de délai. En période de stress, les règlements peuvent être <strong>retardés</strong>, <strong>partiels</strong> (pro-rata), ou nécessiter plusieurs cycles. Si la NAV devient périmée (keeper arrêté), les dépôts et règlements sont <strong>gelés</strong> jusqu'à reprise.</p>
+
+    <h2>10. Risque de liquidité</h2>
+    <p>Le protocole peut imposer un plafond de dépôt, un dépôt minimum et un retrait minimum. La capacité à entrer ou sortir dépend de la liquidité disponible sur Hyperliquid et de l'état de la file.</p>
+
+    <h2>11. Risque réglementaire</h2>
+    <p>Le statut juridique du token 9HYPE est <strong>incertain</strong> et varie selon les juridictions. Il pourrait être qualifié de <strong>titre financier</strong>, de <strong>part de placement collectif</strong> ou d'instrument réglementé. Des évolutions réglementaires peuvent restreindre, suspendre ou interdire l'accès au protocole, geler des fonds, ou vous exposer à des obligations (déclaratives, fiscales). Vous êtes seul responsable de votre conformité dans votre juridiction.</p>
+
+    <h2>12. Absence d'assurance et de garantie</h2>
+    <p>Les actifs détenus ou gérés via le protocole <strong>ne sont couverts par aucun fonds de garantie des dépôts, aucune assurance, aucun mécanisme de compensation</strong>. Il n'existe <strong>aucun prêteur en dernier ressort</strong>.</p>
+
+    <h2>13. Risque fiscal</h2>
+    <p>Le traitement fiscal des dépôts, du rendement et des retraits relève de <strong>votre seule responsabilité</strong>. Consultez un conseiller fiscal.</p>
+
+    <h2>14. Perte totale possible</h2>
+    <p>La combinaison des risques ci-dessus peut entraîner la <strong>perte de la totalité</strong> de votre dépôt. Le protocole, ses contributeurs et l'opérateur <strong>ne garantissent ni le capital ni le rendement</strong>.</p>
+
+    <hr />
+
+    <p class="legal-warning">En continuant, vous confirmez comprendre et accepter ces risques.</p>
+  </div>
+</body>
+</html>
