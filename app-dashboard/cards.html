@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="robots" content="noindex, nofollow" />
+  <title>Nova · Cartes — Mon espace</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700;800&family=Hanken+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet" />
+
+  <link rel="stylesheet" href="../css/base.css" />
+  <link rel="stylesheet" href="../css/admin.css" />
+</head>
+<body>
+  <script src="../js/store.js"></script>
+  <script src="../js/admin-ui.js"></script>
+  <script src="../js/data/demoApp.js"></script>
+  <script src="../js/components/app/AppDashboardComponents.js"></script>
+
+  <script>
+  (function () {
+    "use strict";
+    var UI = window.NovaUI, NC = window.NovaComponents, ND = window.NovaData;
+
+    var content = UI.AppDashboardLayout({
+      active: "app-dashboard",
+      title: "Mes cartes",
+      description: "Carte métal physique et carte virtuelle. Gel/dégel et plafonds — actions de démonstration.",
+      breadcrumb: ["Nova", "Mon espace", "Cartes"],
+      savingsNotice: false
+    });
+
+    // état local des cartes (clone pour le gel/dégel de démonstration)
+    var cards = [];
+
+    function load() {
+      UI.showLoading(content, "Chargement de vos cartes.");
+      window.setTimeout(render, 60);
+    }
+
+    function render() {
+      try {
+        var app = ND && ND.demoApp;
+        if (!app) throw new Error("Données de démonstration indisponibles");
+        if (!cards.length) cards = JSON.parse(JSON.stringify(app.cards || []));
+        UI.clear(content);
+
+        content.appendChild(NC.AppTabs("cards"));
+
+        if (!cards.length) { UI.showEmpty(content, "Aucune carte associée à ce compte."); return; }
+
+        var totalSpent = 0;
+        cards.forEach(function (c) { totalSpent += Number(c.monthlySpentEUR || 0); });
+        content.appendChild(UI.el("div", { class: "nv-stats-grid" }, [
+          UI.statsCard({ label: "Cartes actives", value: cards.filter(function (c) { return !c.frozen; }).length, hint: cards.length + " au total", icon: "▭" }),
+          UI.statsCard({ label: "Dépensé ce mois", value: UI.fmtEUR(totalSpent), hint: "toutes cartes", icon: "∑" }),
+          UI.statsCard({ label: "Réseau", value: "Mastercard", hint: "paiements & sans contact", icon: "◎" })
+        ]));
+
+        var list = UI.el("div");
+        cards.forEach(function (card) {
+          var box = NC.CardPreview(card, {
+            onFreeze: function (c) {
+              c.frozen = !c.frozen;
+              c.status = c.frozen ? "frozen" : "active";
+              render();
+            },
+            onReveal: function () {
+              window.alert("Détails de carte masqués en démonstration. Données fictives — projet Nova en développement.");
+            }
+          });
+          box.style.marginBottom = "16px";
+          list.appendChild(box);
+        });
+        content.appendChild(list);
+
+        content.appendChild(UI.el("p", { class: "nv-muted", style: { fontSize: "12px", marginTop: "8px" },
+          text: "Carte métal miroir verticale (signature Nova) et carte virtuelle pour les abonnements. Émission soumise à l'obtention des autorisations nécessaires." }));
+      } catch (e) {
+        UI.showError(content, "Impossible de charger vos cartes. " + (e && e.message ? e.message : ""));
+      }
+    }
+
+    load();
+  })();
+  </script>
+</body>
+</html>

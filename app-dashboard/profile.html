@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="robots" content="noindex, nofollow" />
+  <title>Nova · Profil — Mon espace</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700;800&family=Hanken+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet" />
+
+  <link rel="stylesheet" href="../css/base.css" />
+  <link rel="stylesheet" href="../css/admin.css" />
+</head>
+<body>
+  <script src="../js/store.js"></script>
+  <script src="../js/admin-ui.js"></script>
+  <script src="../js/data/demoApp.js"></script>
+  <script src="../js/components/app/AppDashboardComponents.js"></script>
+
+  <script>
+  (function () {
+    "use strict";
+    var UI = window.NovaUI, NC = window.NovaComponents, ND = window.NovaData;
+
+    var content = UI.AppDashboardLayout({
+      active: "app-dashboard",
+      title: "Profil",
+      description: "Vos informations personnelles, votre formule et les coordonnées de votre compte courant.",
+      breadcrumb: ["Nova", "Mon espace", "Profil"],
+      savingsNotice: false
+    });
+
+    function load() {
+      UI.showLoading(content, "Chargement de votre profil.");
+      window.setTimeout(render, 60);
+    }
+
+    function render() {
+      try {
+        var app = ND && ND.demoApp;
+        if (!app) throw new Error("Données de démonstration indisponibles");
+        UI.clear(content);
+
+        content.appendChild(NC.AppTabs("profile"));
+
+        var left = NC.ProfileSummary(app.user, app.account);
+
+        var right = UI.el("div", { class: "nv-card" }, [
+          UI.el("div", { class: "nv-card-title", text: "Coordonnées du compte" }),
+          UI.el("div", { class: "nv-card-sub", style: { marginBottom: "8px" }, text: "Recevez des virements SEPA sur cet IBAN." }),
+          UI.el("div", { class: "nv-row", style: { justifyContent: "space-between", padding: "10px 0", borderBottom: "1px solid var(--nv-line)" } }, [
+            UI.el("span", { class: "nv-stat-label", text: "IBAN" }),
+            UI.el("span", { class: "nv-mono", style: { fontWeight: "700" }, text: app.account.iban })
+          ]),
+          UI.el("div", { class: "nv-row", style: { justifyContent: "space-between", padding: "10px 0", borderBottom: "1px solid var(--nv-line)" } }, [
+            UI.el("span", { class: "nv-stat-label", text: "BIC / SWIFT" }),
+            UI.el("span", { class: "nv-mono", style: { fontWeight: "700" }, text: app.account.bic })
+          ]),
+          UI.el("div", { class: "nv-row", style: { justifyContent: "space-between", padding: "10px 0" } }, [
+            UI.el("span", { class: "nv-stat-label", text: "Titulaire" }),
+            UI.el("span", { style: { fontWeight: "700" }, text: app.user.firstName + " " + app.user.lastName })
+          ]),
+          UI.el("div", { class: "nv-row", style: { gap: "8px", flexWrap: "wrap", marginTop: "14px" } }, [
+            UI.el("button", { class: "nv-btn nv-btn--ghost", text: "Copier l'IBAN", onclick: function () {
+              try { navigator.clipboard.writeText((app.account.iban || "").replace(/\s/g, "")); } catch (e) {}
+              window.alert("IBAN copié (démonstration).");
+            } }),
+            UI.el("a", { class: "nv-btn nv-btn--ghost", href: "settings.html", text: "Modifier mes préférences" })
+          ]),
+          UI.el("p", { class: "nv-notice", style: { marginTop: "14px" }, html:
+            "<b>Information importante.</b> Coordonnées bancaires fictives. Le compte courant et l'IBAN seront disponibles sous réserve de l'obtention des autorisations nécessaires (licence EMI visée auprès de la Banque de Lituanie)." })
+        ]);
+
+        content.appendChild(UI.el("div", { class: "nv-grid-2" }, [left, right]));
+      } catch (e) {
+        UI.showError(content, "Impossible de charger votre profil. " + (e && e.message ? e.message : ""));
+      }
+    }
+
+    load();
+  })();
+  </script>
+</body>
+</html>

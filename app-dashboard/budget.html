@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="robots" content="noindex, nofollow" />
+  <title>Nova · Budget — Mon espace</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700;800&family=Hanken+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet" />
+
+  <link rel="stylesheet" href="../css/base.css" />
+  <link rel="stylesheet" href="../css/admin.css" />
+</head>
+<body>
+  <script src="../js/store.js"></script>
+  <script src="../js/admin-ui.js"></script>
+  <script src="../js/data/demoApp.js"></script>
+  <script src="../js/components/app/AppDashboardComponents.js"></script>
+
+  <script>
+  (function () {
+    "use strict";
+    var UI = window.NovaUI, NC = window.NovaComponents, ND = window.NovaData;
+
+    var content = UI.AppDashboardLayout({
+      active: "app-dashboard",
+      title: "Budget du mois",
+      description: "Suivi de vos dépenses par catégorie. Les enveloppes sont indicatives — espace de démonstration.",
+      breadcrumb: ["Nova", "Mon espace", "Budget"],
+      savingsNotice: false
+    });
+
+    function load() {
+      UI.showLoading(content, "Calcul de votre budget.");
+      window.setTimeout(render, 60);
+    }
+
+    function render() {
+      try {
+        var app = ND && ND.demoApp;
+        if (!app) throw new Error("Données de démonstration indisponibles");
+        var cats = (app.budgetCategories || []).slice();
+        UI.clear(content);
+
+        content.appendChild(NC.AppTabs("budget"));
+
+        if (!cats.length) { UI.showEmpty(content, "Aucune catégorie de budget définie."); return; }
+
+        var totalBudget = 0, totalSpent = 0;
+        cats.forEach(function (c) { totalBudget += Number(c.budgetEUR || 0); totalSpent += Number(c.spentEUR || 0); });
+        var remaining = totalBudget - totalSpent;
+        var ratio = totalBudget > 0 ? Math.round((totalSpent / totalBudget) * 100) : 0;
+
+        content.appendChild(UI.el("div", { class: "nv-stats-grid" }, [
+          UI.statsCard({ label: "Budget total", value: UI.fmtEUR(totalBudget), hint: "ce mois", icon: "▦" }),
+          UI.statsCard({ label: "Dépensé", value: UI.fmtEUR(totalSpent), hint: ratio + " % du budget", icon: "－" }),
+          UI.statsCard({ label: "Restant", value: UI.fmtEUR(remaining), hint: remaining >= 0 ? "dans l'enveloppe" : "dépassement", icon: "＝", delta: remaining >= 0 ? "OK" : "dépassement" }),
+          UI.statsCard({ label: "Catégories", value: cats.length, hint: "suivies", icon: "≣" })
+        ]));
+
+        // Graphe comparatif budget vs dépensé
+        var chartBox = UI.el("div", { class: "nv-mb-24" });
+        content.appendChild(chartBox);
+        UI.monitoringChart(chartBox, [
+          { label: "Budget", color: "#17171A", data: cats.map(function (c) { return Number(c.budgetEUR || 0); }) },
+          { label: "Dépensé", color: "#2FD96E", data: cats.map(function (c) { return Number(c.spentEUR || 0); }) }
+        ], { type: "bar", title: "Budget vs dépensé par catégorie", height: 220,
+            labels: cats.map(function (c) { return (c.label || c.category || "").slice(0, 8); }) });
+
+        // Cartes par catégorie
+        content.appendChild(UI.el("div", { class: "nv-section-title", text: "Par catégorie" }));
+        var grid = UI.el("div", { class: "nv-app-grid" });
+        cats.forEach(function (c) { grid.appendChild(NC.BudgetCategoryCard(c)); });
+        content.appendChild(grid);
+      } catch (e) {
+        UI.showError(content, "Impossible de charger votre budget. " + (e && e.message ? e.message : ""));
+      }
+    }
+
+    load();
+  })();
+  </script>
+</body>
+</html>

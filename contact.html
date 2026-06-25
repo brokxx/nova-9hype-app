@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Nova — Contact</title>
+  <meta name="description" content="Contactez l'équipe Nova : question générale, support, partenariat, presse ou investisseur." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800&family=Hanken+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/base.css" />
+  <link rel="stylesheet" href="css/site.css" />
+</head>
+<body class="ns ns-body">
+  <div id="ns-header"></div>
+  <main class="ns-main">
+    <div class="ns-wrap">
+      <section class="ns-hero">
+        <span class="ns-kicker">Contact</span>
+        <h1 class="ns-h1">Parlons-en.</h1>
+        <p class="ns-lead">Une question, une idée, une demande de partenariat ou presse ? Écrivez-nous — nous revenons vers vous rapidement. (Démonstration : aucun message n'est réellement envoyé pour l'instant.)</p>
+      </section>
+    </div>
+
+    <div class="ns-wrap">
+      <section class="ns-section">
+        <div class="ns-grid" style="grid-template-columns: 1.3fr 1fr;">
+          <div class="ns-card">
+            <form class="ns-form" id="contactForm" novalidate>
+              <div class="ns-field"><label for="cf-name">Nom</label><input class="ns-input" id="cf-name" type="text" placeholder="Votre nom" required /></div>
+              <div class="ns-field"><label for="cf-email">Email</label><input class="ns-input" id="cf-email" type="email" placeholder="vous@exemple.com" required /></div>
+              <div class="ns-field"><label for="cf-subject">Sujet</label>
+                <select class="ns-select" id="cf-subject">
+                  <option>Question générale</option>
+                  <option>Support technique</option>
+                  <option>Données personnelles (RGPD)</option>
+                  <option>Réclamation</option>
+                  <option>Partenariat</option>
+                  <option>Presse</option>
+                  <option>Investisseur</option>
+                </select>
+              </div>
+              <div class="ns-field"><label for="cf-msg">Message</label><textarea class="ns-textarea" id="cf-msg" placeholder="Votre message…" required></textarea></div>
+              <button class="ns-btn solid" type="submit" style="justify-content:center">Envoyer</button>
+            </form>
+            <div class="ns-form-done" id="contactDone" style="display:none">
+              <h3 style="margin:0 0 6px;font-family:var(--font-display)">Message bien reçu ✓</h3>
+              <p style="margin:0;color:var(--ns-ink2)">Merci ! Ceci est une démonstration : votre message n'a pas été transmis. Nous reviendrons vers vous dès que la plateforme sera ouverte.</p>
+            </div>
+          </div>
+          <div>
+            <div class="ns-card" style="margin-bottom:16px"><h3>Support</h3><p>Consultez d'abord notre centre d'aide et la FAQ.</p><p style="margin-top:10px"><a class="ns-btn" href="support/index.html">Centre d'aide</a></p></div>
+            <div class="ns-card"><h3>Pour les médias & partenaires</h3><p>Demandes presse, partenariats et investisseurs : précisez l'objet dans le formulaire, nous orienterons votre demande.</p></div>
+          </div>
+        </div>
+      </section>
+    </div>
+  </main>
+  <div id="ns-footer"></div>
+  <script src="js/site.js"></script>
+  <script>
+    NovaSite.mountHeader("contact"); NovaSite.mountFooter();
+    (function () {
+      var form = document.getElementById("contactForm");
+      var done = document.getElementById("contactDone");
+      form.addEventListener("submit", function (e) {
+        e.preventDefault();
+        var name = document.getElementById("cf-name");
+        var email = document.getElementById("cf-email");
+        var msg = document.getElementById("cf-msg");
+        if (!name.value.trim() || !/.+@.+\..+/.test(email.value) || !msg.value.trim()) {
+          [name, email, msg].forEach(function (f) {
+            f.style.borderColor = f.value.trim() && (f !== email || /.+@.+\..+/.test(email.value)) ? "" : "#c0392b";
+          });
+          return;
+        }
+        form.style.display = "none";
+        done.style.display = "block";
+      });
+    })();
+  </script>
+</body>
+</html>

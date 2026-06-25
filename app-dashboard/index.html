@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="robots" content="noindex, nofollow" />
+  <title>Nova · Mon espace</title>
+
+  <!-- Google Fonts : Archivo (titres) + Hanken Grotesk (texte) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700;800&family=Hanken+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet" />
+
+  <!-- DA Nova -->
+  <link rel="stylesheet" href="../css/base.css" />
+  <link rel="stylesheet" href="../css/admin.css" />
+</head>
+<body>
+  <!-- Scripts classiques (file://), chemins relatifs -->
+  <script src="../js/store.js"></script>
+  <script src="../js/admin-ui.js"></script>
+  <script src="../js/data/demoApp.js"></script>
+  <script src="../js/components/app/AppDashboardComponents.js"></script>
+
+  <script>
+  (function () {
+    "use strict";
+    var UI = window.NovaUI, NC = window.NovaComponents, ND = window.NovaData;
+
+    var content = UI.AppDashboardLayout({
+      active: "app-dashboard",
+      title: "Bonjour Camille",
+      description: "Aperçu de votre compte courant, de votre épargne et de vos dernières opérations. Espace de démonstration — projet Nova en développement, non agréé.",
+      breadcrumb: ["Nova", "Mon espace", "Aperçu"]
+    });
+
+    function load() {
+      UI.showLoading(content, "Chargement de votre espace.");
+      window.setTimeout(render, 60);
+    }
+
+    function render() {
+      try {
+        var app = ND && ND.demoApp;
+        if (!app) throw new Error("Données de démonstration indisponibles");
+        UI.clear(content);
+
+        content.appendChild(NC.AppTabs("overview"));
+        content.appendChild(NC.BalanceOverviewCard(app.account));
+
+        var income = 0, expense = 0;
+        (app.transactions || []).forEach(function (t) {
+          var a = Number(t.amountEUR || 0);
+          if (a > 0) income += a; else expense += -a;
+        });
+        var card = (app.cards || [])[0] || {};
+        content.appendChild(UI.el("div", { class: "nv-stats-grid" }, [
+          UI.statsCard({ label: "Entrées (récent)", value: UI.fmtEUR(income), hint: "salaire & virements reçus", icon: "＋" }),
+          UI.statsCard({ label: "Sorties (récent)", value: UI.fmtEUR(expense), hint: "dépenses & virements", icon: "－" }),
+          UI.statsCard({ label: "Carte principale", value: UI.fmtEUR(card.monthlySpentEUR), hint: "ce mois · plafond " + UI.fmtEUR(card.monthlyLimitEUR), icon: "▭" }),
+          UI.statsCard({ label: "Épargne", value: UI.fmtEUR(app.account.savingsEUR), hint: "objectif 7 % — non garanti", icon: "✦" })
+        ]));
+
+        var left = UI.el("div", null, [
+          NC.TransactionList(app.transactions, {
+            title: "Dernières opérations", limit: 6,
+            action: UI.el("a", { class: "nv-btn nv-btn--sm nv-btn--ghost", href: "transactions.html", text: "Tout voir" })
+          })
+        ]);
+        var right = UI.el("div", null, [ UI.el("div", { class: "nv-section-title", text: "Budgets en cours" }) ]);
+        (app.budgetCategories || []).slice(0, 3).forEach(function (c) {
+          var box = NC.BudgetCategoryCard(c); box.style.marginBottom = "14px"; right.appendChild(box);
+        });
+        right.appendChild(UI.el("a", { class: "nv-btn nv-btn--ghost", href: "budget.html", text: "Gérer mon budget" }));
+        content.appendChild(UI.el("div", { class: "nv-grid-2", style: { marginTop: "20px" } }, [left, right]));
+      } catch (e) {
+        UI.showError(content, "Impossible de charger votre espace. " + (e && e.message ? e.message : ""));
+      }
+    }
+
+    load();
+  })();
+  </script>
+</body>
+</html>

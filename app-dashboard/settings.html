@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="robots" content="noindex, nofollow" />
+  <title>Nova · Paramètres — Mon espace</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700;800&family=Hanken+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet" />
+
+  <link rel="stylesheet" href="../css/base.css" />
+  <link rel="stylesheet" href="../css/admin.css" />
+</head>
+<body>
+  <script src="../js/store.js"></script>
+  <script src="../js/admin-ui.js"></script>
+  <script src="../js/data/demoApp.js"></script>
+  <script src="../js/components/app/AppDashboardComponents.js"></script>
+
+  <script>
+  (function () {
+    "use strict";
+    var UI = window.NovaUI, NC = window.NovaComponents, ND = window.NovaData;
+
+    var content = UI.AppDashboardLayout({
+      active: "app-dashboard",
+      title: "Paramètres",
+      description: "Préférences d'affichage, notifications et confidentialité. Réglages de démonstration, sans persistance.",
+      breadcrumb: ["Nova", "Mon espace", "Paramètres"],
+      savingsNotice: false
+    });
+
+    function load() {
+      UI.showLoading(content, "Chargement de vos paramètres.");
+      window.setTimeout(render, 60);
+    }
+
+    function render() {
+      try {
+        var app = ND && ND.demoApp;
+        if (!app) throw new Error("Données de démonstration indisponibles");
+        UI.clear(content);
+
+        content.appendChild(NC.AppTabs("settings"));
+
+        content.appendChild(NC.SettingsPanel({
+          language: (app.meta && app.meta.locale === "fr-FR") ? "fr" : "fr",
+          currency: (app.meta && app.meta.currency) || "EUR"
+        }, {
+          onChange: function (key, value) {
+            console && console.log && console.log("[Nova démo] paramètre", key, "=>", value);
+          },
+          onAction: function (action) {
+            if (action === "export") window.alert("Export de vos données (RGPD) — démonstration. Aucune donnée réelle.");
+            else if (action === "logout") window.location.href = "../index.html";
+            else if (action === "close") window.alert("Clôture de compte — démonstration. Projet Nova en développement, non agréé.");
+          }
+        }));
+
+        content.appendChild(UI.el("p", { class: "nv-muted", style: { fontSize: "12px", marginTop: "14px" },
+          text: "Espace de démonstration — projet Nova en développement, non agréé. Données 100 % fictives. " + ((app.meta && app.meta.disclaimer) || "") }));
+      } catch (e) {
+        UI.showError(content, "Impossible de charger vos paramètres. " + (e && e.message ? e.message : ""));
+      }
+    }
+
+    load();
+  })();
+  </script>
+</body>
+</html>

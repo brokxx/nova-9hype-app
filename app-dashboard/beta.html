@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="robots" content="noindex, nofollow" />
+  <title>Nova · Beta — Stratégie 7 %</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700;800&family=Hanken+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet" />
+
+  <link rel="stylesheet" href="../css/base.css" />
+  <link rel="stylesheet" href="../css/admin.css" />
+  <link rel="stylesheet" href="../css/beta.css" />
+</head>
+<body>
+  <script src="../js/store.js"></script>
+  <script src="../js/admin-ui.js"></script>
+  <script src="../js/data/demoApp.js"></script>
+  <script src="../js/components/app/AppDashboardComponents.js"></script>
+  <script src="../js/beta-lab.js"></script>
+
+  <script>
+  (function () {
+    "use strict";
+    var UI = window.NovaUI, NC = window.NovaComponents;
+
+    var content = UI.AppDashboardLayout({
+      active: "beta",
+      title: "Beta · Épargne 7 %",
+      description: "Déposez, retirez ou programmez un versement mensuel, et suivez en temps réel l'évolution de votre épargne. La stratégie est gérée par Nova (objectif 7 % annualisé).",
+      breadcrumb: ["Nova", "Mon espace", "Beta"],
+      savingsNotice: false
+    });
+
+    content.appendChild(NC.AppTabs("beta"));
+
+    var lab = UI.el("div");
+    content.appendChild(lab);
+
+    try {
+      window.NovaBeta.mount(lab);
+    } catch (e) {
+      UI.showError(content, "Impossible de charger le laboratoire Beta. " + (e && e.message ? e.message : ""));
+    }
+  })();
+  </script>
+</body>
+</html>

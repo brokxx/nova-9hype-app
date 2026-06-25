@@ -1,0 +1,197 @@
+/* ============================================================
+   NOVA — site vitrine public (pages reliées par un menu).
+   Même DA que la première page : beige chaud, encre noire,
+   Archivo + Hanken, accent vert #2FD96E. Réutilise base.css.
+   Header + footer injectés par js/site.js (cohérence garantie).
+   ============================================================ */
+
+.ns {
+  --ns-bg: #E9E4DB;
+  --ns-bg2: #F2EEE6;
+  --ns-ink: #17171A;
+  --ns-ink2: #3F3F42;
+  --ns-ink3: #84847E;
+  --ns-line: rgba(23, 23, 26, 0.12);
+  --ns-line-2: rgba(23, 23, 26, 0.22);
+  --ns-surface: #FBF9F4;
+  --ns-dark: #0b0b0d;
+  --ns-green: #2FD96E;
+  --ns-green-ink: #1B9E58;
+  --ns-radius: 18px;
+  --ns-radius-sm: 12px;
+}
+
+.ns-body {
+  margin: 0;
+  background:
+    radial-gradient(120% 80% at 80% -5%, #F2EEE6 0%, #E9E4DB 50%, #DFD9CE 100%);
+  color: var(--ns-ink);
+  font-family: var(--font-body);
+  -webkit-font-smoothing: antialiased;
+  min-height: 100vh;
+  display: flex; flex-direction: column;
+}
+.ns-body::after {
+  content: ""; position: fixed; inset: 0; pointer-events: none; z-index: 0;
+  opacity: .5; mix-blend-mode: multiply;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.05'/%3E%3C/svg%3E");
+}
+.ns-body > * { position: relative; z-index: 1; }
+
+/* ---------------- header / menu ---------------- */
+.ns-header {
+  position: sticky; top: 0; z-index: 50;
+  display: flex; align-items: center; gap: 22px;
+  padding: 16px clamp(20px, 5vw, 64px);
+  background: color-mix(in srgb, var(--ns-bg) 80%, transparent);
+  backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
+  border-bottom: 1px solid var(--ns-line);
+}
+.ns-word {
+  font-family: var(--font-display); font-weight: 700; font-size: 23px;
+  letter-spacing: -0.03em; color: var(--ns-ink); text-decoration: none;
+}
+.ns-menu { display: flex; align-items: center; gap: 4px; flex: 1; }
+.ns-menu a {
+  font-size: 14.5px; font-weight: 600; color: var(--ns-ink2);
+  text-decoration: none; padding: 8px 13px; border-radius: 999px;
+  transition: background .18s, color .18s; white-space: nowrap;
+}
+.ns-menu a:hover { background: rgba(255,255,255,.55); color: var(--ns-ink); }
+.ns-menu a.is-active { color: var(--ns-ink); background: rgba(255,255,255,.7); }
+.ns-actions { display: flex; align-items: center; gap: 10px; }
+.ns-link {
+  font-size: 14px; font-weight: 600; color: var(--ns-ink2); text-decoration: none;
+  padding: 9px 15px; border-radius: 999px; border: 1px solid var(--ns-line);
+  background: rgba(255,255,255,.4); white-space: nowrap; transition: background .2s, color .2s;
+}
+.ns-link:hover { background: rgba(255,255,255,.8); color: var(--ns-ink); }
+.ns-link.solid { background: var(--ns-ink); color: #fff; border-color: transparent; }
+.ns-link.solid:hover { background: #000; color: #fff; }
+.ns-link.ghost { background: transparent; border-color: transparent; }
+.ns-burger { display: none; border: 1px solid var(--ns-line); background: rgba(255,255,255,.4);
+  border-radius: 10px; width: 40px; height: 40px; font-size: 18px; cursor: pointer; }
+
+/* ---------------- page content ---------------- */
+.ns-main { flex: 1; }
+.ns-wrap { max-width: 1120px; margin: 0 auto; padding: 0 clamp(20px, 5vw, 64px); }
+
+.ns-hero { padding: clamp(48px, 8vw, 96px) 0 clamp(28px, 5vw, 56px); max-width: 760px; }
+.ns-kicker {
+  display: inline-flex; align-items: center; gap: 12px;
+  font-size: 11.5px; font-weight: 700; letter-spacing: .24em; text-transform: uppercase;
+  color: var(--ns-ink3); margin-bottom: 22px;
+}
+.ns-kicker::before { content: ""; width: 26px; height: 1px; background: rgba(23,23,26,.4); }
+.ns-h1 {
+  font-family: var(--font-display); font-weight: 700;
+  font-size: clamp(34px, 5vw, 60px); line-height: 1.06; letter-spacing: -0.035em;
+  margin: 0 0 18px;
+}
+.ns-lead { font-size: clamp(16px, 1.5vw, 19px); line-height: 1.65; color: var(--ns-ink2); max-width: 60ch; }
+
+.ns-section { padding: clamp(28px, 5vw, 56px) 0; }
+.ns-section + .ns-section { border-top: 1px solid var(--ns-line); }
+.ns-h2 { font-family: var(--font-display); font-weight: 700; font-size: clamp(24px, 3vw, 36px); letter-spacing: -0.03em; margin: 0 0 10px; }
+.ns-sub { color: var(--ns-ink2); font-size: 16px; line-height: 1.6; max-width: 62ch; margin: 0 0 28px; }
+
+.ns-grid { display: grid; gap: 16px; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); }
+.ns-card {
+  background: var(--ns-surface); border: 1px solid var(--ns-line);
+  border-radius: var(--ns-radius); padding: 22px;
+  box-shadow: 0 1px 2px rgba(23,23,26,.04);
+}
+.ns-card h3 { font-family: var(--font-display); font-weight: 700; font-size: 17px; letter-spacing: -0.01em; margin: 12px 0 6px; }
+.ns-card p { color: var(--ns-ink2); font-size: 14px; line-height: 1.55; margin: 0; }
+.ns-ico {
+  width: 42px; height: 42px; border-radius: 11px; display: grid; place-items: center;
+  font-size: 20px; background: var(--ns-bg2); border: 1px solid var(--ns-line); color: var(--ns-ink);
+}
+
+/* listes à puces stylées */
+.ns-list { list-style: none; padding: 0; margin: 0; display: grid; gap: 12px; }
+.ns-list li { position: relative; padding-left: 26px; color: var(--ns-ink2); line-height: 1.5; }
+.ns-list li::before { content: "✓"; position: absolute; left: 0; top: 0; color: var(--ns-green-ink); font-weight: 800; }
+
+/* bandeau sombre (contraste, façon section cartes de l'accueil) */
+.ns-dark { background: radial-gradient(70% 60% at 50% 0%, #1c1c20 0%, #0b0b0d 60%); color: #fff; }
+.ns-dark .ns-h2, .ns-dark .ns-h1 { color: #fff; }
+.ns-dark .ns-sub, .ns-dark p { color: rgba(255,255,255,.72); }
+.ns-dark .ns-card { background: #131316; border-color: rgba(255,255,255,.1); }
+.ns-dark .ns-card h3 { color: #fff; }
+.ns-dark .ns-ico { background: #1b1b1f; border-color: rgba(255,255,255,.12); color: #fff; }
+
+/* offre / chiffre clé */
+.ns-stat-row { display: flex; flex-wrap: wrap; gap: 14px; }
+.ns-stat { background: var(--ns-surface); border: 1px solid var(--ns-line); border-radius: var(--ns-radius); padding: 20px 22px; min-width: 180px; flex: 1; }
+.ns-stat b { display: block; font-family: var(--font-display); font-weight: 700; font-size: 34px; letter-spacing: -0.03em; color: var(--ns-green-ink); }
+.ns-stat span { font-size: 13.5px; color: var(--ns-ink3); }
+
+/* CTA bloc */
+.ns-cta-row { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 26px; }
+.ns-btn {
+  display: inline-flex; align-items: center; gap: 8px; cursor: pointer;
+  font-family: var(--font-body); font-weight: 700; font-size: 15px; text-decoration: none;
+  padding: 13px 24px; border-radius: 999px; border: 1px solid var(--ns-line-2);
+  background: transparent; color: var(--ns-ink); transition: transform .18s, background .2s;
+}
+.ns-btn:hover { transform: translateY(-2px); }
+.ns-btn.solid { background: var(--ns-ink); color: #fff; border-color: transparent; }
+.ns-btn.solid:hover { background: #000; }
+
+/* avertissement (épargne 7 %) */
+.ns-notice {
+  font-size: 13px; color: var(--ns-ink2); line-height: 1.55;
+  background: #fff6e6; border: 1px solid rgba(200,136,31,.3);
+  border-radius: var(--ns-radius-sm); padding: 14px 16px; margin-top: 18px;
+}
+.ns-notice b { color: #9a6a12; }
+
+/* formulaire contact */
+.ns-form { display: grid; gap: 14px; max-width: 520px; }
+.ns-field { display: grid; gap: 6px; }
+.ns-field label { font-size: 13px; font-weight: 600; color: var(--ns-ink2); }
+.ns-input, .ns-textarea, .ns-select {
+  font-family: var(--font-body); font-size: 15px; color: var(--ns-ink);
+  background: var(--ns-surface); border: 1px solid var(--ns-line-2);
+  border-radius: var(--ns-radius-sm); padding: 12px 14px; width: 100%;
+}
+.ns-input:focus, .ns-textarea:focus, .ns-select:focus { outline: none; box-shadow: 0 0 0 2px var(--ns-ink); }
+.ns-textarea { min-height: 120px; resize: vertical; }
+.ns-form-done { background: var(--ns-surface); border: 1px solid var(--ns-line); border-radius: var(--ns-radius); padding: 20px; }
+
+/* tarifs */
+.ns-pricing { display: grid; gap: 16px; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); }
+.ns-plan { background: var(--ns-surface); border: 1px solid var(--ns-line); border-radius: var(--ns-radius); padding: 24px; display: flex; flex-direction: column; }
+.ns-plan.is-featured { border-color: var(--ns-ink); box-shadow: 0 20px 50px -28px rgba(23,23,26,.5); }
+.ns-plan h3 { font-family: var(--font-display); font-weight: 700; font-size: 20px; margin: 0 0 4px; }
+.ns-price { font-family: var(--font-display); font-weight: 700; font-size: 32px; letter-spacing: -0.03em; margin: 8px 0 2px; }
+.ns-price small { font-size: 14px; color: var(--ns-ink3); font-weight: 600; }
+.ns-plan .ns-list { margin: 16px 0 20px; }
+.ns-plan .ns-btn { margin-top: auto; justify-content: center; }
+.ns-tag { display: inline-block; font-size: 11px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: var(--ns-green-ink); margin-bottom: 6px; }
+
+/* ---------------- footer ---------------- */
+.ns-footer { background: var(--ns-dark); color: rgba(255,255,255,.7); margin-top: 40px; }
+.ns-footer-in { max-width: 1120px; margin: 0 auto; padding: clamp(36px, 6vw, 64px) clamp(20px, 5vw, 64px) 32px; }
+.ns-footer-cols { display: grid; gap: 28px; grid-template-columns: 1.4fr repeat(3, 1fr); }
+.ns-footer h4 { font-family: var(--font-display); font-weight: 700; font-size: 13px; letter-spacing: .04em; color: #fff; margin: 0 0 12px; }
+.ns-footer a { display: block; color: rgba(255,255,255,.65); text-decoration: none; font-size: 14px; padding: 4px 0; }
+.ns-footer a:hover { color: #fff; }
+.ns-footer-word { font-family: var(--font-display); font-weight: 700; font-size: 26px; letter-spacing: -0.03em; color: #fff; }
+.ns-footer-tag { font-size: 14px; line-height: 1.6; margin: 10px 0 0; max-width: 32ch; }
+.ns-footer-legal { border-top: 1px solid rgba(255,255,255,.12); margin-top: 28px; padding-top: 20px; font-size: 12px; line-height: 1.6; color: rgba(255,255,255,.5); }
+
+/* ---------------- responsive ---------------- */
+@media (max-width: 860px) {
+  .ns-menu, .ns-actions .ns-desktop { display: none; }
+  .ns-burger { display: inline-flex; }
+  .ns-menu.is-open {
+    display: flex; flex-direction: column; align-items: stretch; gap: 2px;
+    position: absolute; top: 100%; left: 0; right: 0;
+    background: var(--ns-bg2); border-bottom: 1px solid var(--ns-line);
+    padding: 10px clamp(20px, 5vw, 64px) 16px;
+  }
+  .ns-footer-cols { grid-template-columns: 1fr 1fr; }
+}
+@media (max-width: 520px) { .ns-footer-cols { grid-template-columns: 1fr; } }

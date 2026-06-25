@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="robots" content="noindex, nofollow" />
+  <title>Nova · Sécurité — Mon espace</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700;800&family=Hanken+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet" />
+
+  <link rel="stylesheet" href="../css/base.css" />
+  <link rel="stylesheet" href="../css/admin.css" />
+</head>
+<body>
+  <script src="../js/store.js"></script>
+  <script src="../js/admin-ui.js"></script>
+  <script src="../js/data/demoApp.js"></script>
+  <script src="../js/components/app/AppDashboardComponents.js"></script>
+
+  <script>
+  (function () {
+    "use strict";
+    var UI = window.NovaUI, NC = window.NovaComponents, ND = window.NovaData;
+
+    var content = UI.AppDashboardLayout({
+      active: "app-dashboard",
+      title: "Sécurité",
+      description: "Protections de votre compte et journal d'activité (connexions, 3-D Secure, appareils). Réglages de démonstration.",
+      breadcrumb: ["Nova", "Mon espace", "Sécurité"],
+      savingsNotice: false
+    });
+
+    function load() {
+      UI.showLoading(content, "Chargement de vos réglages de sécurité.");
+      window.setTimeout(render, 60);
+    }
+
+    function render() {
+      try {
+        var app = ND && ND.demoApp;
+        if (!app) throw new Error("Données de démonstration indisponibles");
+        var events = app.securityEvents || [];
+        UI.clear(content);
+
+        content.appendChild(NC.AppTabs("security"));
+
+        var warnings = events.filter(function (e) { return e.status === "warning"; }).length;
+        content.appendChild(UI.el("div", { class: "nv-stats-grid" }, [
+          UI.statsCard({ label: "2FA", value: "Activée", hint: "code à usage unique", icon: "⛉" }),
+          UI.statsCard({ label: "Appareils de confiance", value: 2, hint: "iPhone 15 · MacBook Air", icon: "❖" }),
+          UI.statsCard({ label: "Événements récents", value: events.length, hint: warnings + " à surveiller", icon: "∿" })
+        ]));
+
+        content.appendChild(NC.SecuritySettingsCard(events, {
+          onToggle: function (key, on) {
+            // démonstration : pas de persistance, simple retour visuel
+            console && console.log && console.log("[Nova démo] réglage", key, "=>", on);
+          }
+        }));
+
+        content.appendChild(UI.el("p", { class: "nv-muted", style: { fontSize: "12px", marginTop: "14px" },
+          text: "Vos données sont protégées conformément au RGPD et aux exigences AML/CFT visées. Projet en développement — sous réserve des autorisations nécessaires." }));
+      } catch (e) {
+        UI.showError(content, "Impossible de charger vos réglages de sécurité. " + (e && e.message ? e.message : ""));
+      }
+    }
+
+    load();
+  })();
+  </script>
+</body>
+</html>

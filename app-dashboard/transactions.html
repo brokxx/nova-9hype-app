@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="robots" content="noindex, nofollow" />
+  <title>Nova · Transactions — Mon espace</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700;800&family=Hanken+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet" />
+
+  <link rel="stylesheet" href="../css/base.css" />
+  <link rel="stylesheet" href="../css/admin.css" />
+</head>
+<body>
+  <script src="../js/store.js"></script>
+  <script src="../js/admin-ui.js"></script>
+  <script src="../js/data/demoApp.js"></script>
+  <script src="../js/components/app/AppDashboardComponents.js"></script>
+
+  <script>
+  (function () {
+    "use strict";
+    var UI = window.NovaUI, NC = window.NovaComponents, ND = window.NovaData;
+
+    var content = UI.AppDashboardLayout({
+      active: "app-dashboard",
+      title: "Transactions",
+      description: "Historique de vos opérations : paiements carte, virements SEPA et P2P entre utilisateurs Nova, épargne.",
+      breadcrumb: ["Nova", "Mon espace", "Transactions"],
+      savingsNotice: false
+    });
+
+    function kindLabel(k) {
+      return ({
+        income: "Entrée", expense: "Dépense", transfer_in: "Virement reçu",
+        transfer_out: "Virement envoyé", savings_out: "Épargne", savings_in: "Épargne"
+      })[k] || k || "—";
+    }
+
+    function load() {
+      UI.showLoading(content, "Chargement de vos opérations.");
+      window.setTimeout(render, 60);
+    }
+
+    function render() {
+      try {
+        var app = ND && ND.demoApp;
+        if (!app) throw new Error("Données de démonstration indisponibles");
+        var txs = (app.transactions || []).slice();
+        UI.clear(content);
+
+        content.appendChild(NC.AppTabs("transactions"));
+
+        if (!txs.length) { UI.showEmpty(content, "Aucune opération enregistrée."); return; }
+
+        var income = 0, expense = 0;
+        txs.forEach(function (t) { var a = Number(t.amountEUR || 0); if (a > 0) income += a; else expense += -a; });
+        content.appendChild(UI.el("div", { class: "nv-stats-grid" }, [
+          UI.statsCard({ label: "Opérations", value: txs.length, hint: "sur la période", icon: "≣" }),
+          UI.statsCard({ label: "Total entrées", value: UI.fmtEUR(income), hint: "crédits", icon: "＋" }),
+          UI.statsCard({ label: "Total sorties", value: UI.fmtEUR(expense), hint: "débits", icon: "－" })
+        ]));
+
+        var box = UI.el("div");
+        content.appendChild(UI.el("div", { class: "nv-section-title", text: "Historique" }));
+        content.appendChild(box);
+
+        var table = UI.dataTable(box, {
+          rows: txs,
+          columns: [
+            { key: "createdAt", label: "Date", render: function (v) { return UI.fmtDate(v); } },
+            { key: "merchant", label: "Bénéficiaire / marchand", render: function (v, r) { return (v || r.label || "—"); } },
+            { key: "category", label: "Catégorie", render: function (v) { return UI.statusBadge(v, "neutral"); } },
+            { key: "kind", label: "Type", render: function (v) { return kindLabel(v); } },
+            { key: "status", label: "Statut", render: function (v) { return UI.statusBadge(v); } },
+            { key: "amountEUR", label: "Montant", numeric: true, render: function (v) {
+                var a = Number(v || 0);
+                var cls = a > 0 ? "nv-pos-text" : (a < 0 ? "nv-neg-text" : "nv-muted");
+                return "<span class='" + cls + "'>" + (a > 0 ? "+" : "") + UI.fmtEUR(a) + "</span>";
+              } }
+          ],
+          options: {
+            pageSize: 10, sortKey: "createdAt", sortDir: "desc",
+            emptyText: "Aucune opération.",
+            toolbarRight: [UI.exportButton(function () { return table.getRows(); }, "nova-transactions")]
+          }
+        });
+      } catch (e) {
+        UI.showError(content, "Impossible de charger vos opérations. " + (e && e.message ? e.message : ""));
+      }
+    }
+
+    load();
+  })();
+  </script>
+</body>
+</html>
